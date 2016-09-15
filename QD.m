@@ -49,8 +49,25 @@ afq = AFQ_run(sub_dirs, Pa, afq);
 %% Add callosal fibers
 afq = AFQ_SegmentCallosum(afq);
 
+%% Add new fibers
 
-% %% Run AFQ on these subjects
-% afq = AFQ_run(sub_dirs, Pa, afq);
+fgName = 'LOT_MD32';
+roi1Name = '85_Optic-Chiasm';
+roi2Name = 'Lt-LGN4';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
 
+fgName = 'ROT_MD32';
+roi1Name = '85_Optic-Chiasm';
+roi2Name = 'Rt-LGN4';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+%%
+outname = fullfile(AFQ_get(afq,'outdir'),['afq_' date]);
+save(outname,'afq');
 
