@@ -123,75 +123,88 @@ end
 for v = 1:length(valname)
     figure; hold('on');
     
-    % loop over 
-%     for k = 1:sum(afq.sub_group)
-                        
-        % Loop over each fiber group
-        for ii = 1:nfg
-            % Get the values for the patient and compute the mean
-            vals_p = pVals(ii).(upper(valname{v}));
-            vals_p = vals_p(:,nodes);
-            vals_pm = nanmean(vals_p,2);
-            
-            % Get the value for each control and compute the mean
-            vals_c = cVals(ii).(upper(valname{v}));
-            vals_c = vals_c(:,nodes);
-            vals_cm = nanmean(vals_c,2);
-            
-            % Compute control group mean and sd
-            m = nanmean(vals_cm);
-            sd = nanstd(vals_cm);
-            
-            % Plot control group means and sd
-            x = [ii-.4 ii-.2 ii+.2 ii+.4];
-            y = [vals_pm',m];
-            
-            bar(x,y)
-            
-            y1 = [m-sd m-sd m+sd m+sd m-sd];
-            y2 = [m-2*sd m-2*sd m+2*sd m+2*sd m-2*sd];
-            fill(x,y2, [.6 .6 .6],'edgecolor',[0 0 0]);
-            fill(x,y1,[.4 .4 .4] ,'edgecolor',[0 0 0]);
-            
-            %         % plot individual means
-            %         for jj = 1:sum(afq.sub_group)
-            vals_cur = vals_p(:,nodes);
-            m_curr   = nanmean(vals_cur);
-            % Define the color of the point for the fiber group based on its zscore
-            tractcol = vals2colormap((m_curr - m)./sd,cmap,crange);
-            
-            % Plot patient mean as a circle
-            plot(ii, m_curr,'ko', 'markerfacecolor',tractcol,'MarkerSize',6);
-            %         end
-        end
+    % loop over
+    %     for k = 1:sum(afq.sub_group)
+    
+    % Loop over each fiber group
+    for ii = 1:nfg
+        % Get the values for the patient and compute the mean
+        vals_p = pVals(ii).(upper(valname{v}));
+        vals_p = vals_p(:,nodes);
+        vals_pm = nanmean(vals_p,2);
         
+        % Get the value for each control and compute the mean
+        vals_c = cVals(ii).(upper(valname{v}));
+        vals_c = vals_c(:,nodes);
+        vals_cm = nanmean(vals_c,2);
         
-        %% make fgnames shorter
-        %     newfgNames = {'l-TR','r-TR','l-C','r-C','l-CC','r-CC','l-CH','r-CH','CFMa',...
-        %         'CFMi','l-IFOF','r-IFOF','l-ILF','r-ILF','l-SLF','r-SLF','l-U','r-U',...
-        %         'l-A','r-A'};
+        % Compute control group mean and sd
+        m = nanmean(vals_cm);
+        sd = nanstd(vals_cm);
         
-        %     set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
-        set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
-        set(gca, 'XTickLabelRotation',90)
-        ylabel(upper(valname{v}));
-        
-        subnames = afq.sub_dirs(afq.sub_group==1);
-        [p, ~]= fileparts(subnames{k});
-        [~,f]= fileparts(p);
-        
-        title(f)
-        
-        h = colorbar('AxisLocation','out');
-        h.Label.String = 'z score';
-        
-        if savefig ==1;
-            saveas(gca,sprintf('%s.eps',upper(valname{v})),'psc2')
-            saveas(gca,sprintf('%s.png',upper(valname{v})))
-        end
-        hold off
+        % Plot control group means and sd
+        %             x = [ii-.4 ii-.2 ii+.2 ii+.4];
+        y(ii,:) = [vals_pm',m];
     end
+    
+    %% bar plot
+    bar(y,0.3)
+    
+    y1 = [m-sd m-sd m+sd m+sd m-sd];
+    y2 = [m-2*sd m-2*sd m+2*sd m+2*sd m-2*sd];
+    fill(x,y2, [.6 .6 .6],'edgecolor',[0 0 0]);
+    fill(x,y1,[.4 .4 .4] ,'edgecolor',[0 0 0]);
+    
+    % get subj name
+    clear f
+    f = {};
+    subnames = afq.sub_dirs(afq.sub_group==1);
+    for l = 1:length(subnames)
+        [p, ~]= fileparts(subnames{l});
+        [~,f{l}]= fileparts(p);
+        find(f,'-')
+    end
+    
+    h = legend(subnames);
+    
+    %         % plot individual means
+    %         for jj = 1:sum(afq.sub_group)
+    vals_cur = vals_p(:,nodes);
+    m_curr   = nanmean(vals_cur);
+    % Define the color of the point for the fiber group based on its zscore
+    tractcol = vals2colormap((m_curr - m)./sd,cmap,crange);
+    
+    % Plot patient mean as a circle
+    plot(ii, m_curr,'ko', 'markerfacecolor',tractcol,'MarkerSize',6);
+    %         end
 end
 
 
-return
+%% make fgnames shorter
+%     newfgNames = {'l-TR','r-TR','l-C','r-C','l-CC','r-CC','l-CH','r-CH','CFMa',...
+%         'CFMi','l-IFOF','r-IFOF','l-ILF','r-ILF','l-SLF','r-SLF','l-U','r-U',...
+%         'l-A','r-A'};
+
+%     set(gca,'xtick',1:nfg,'xticklabel',newfgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+set(gca,'xtick',1:nfg,'xticklabel',fgNames,'xlim',[0 nfg+1],'fontname','times','fontsize',11);
+set(gca, 'XTickLabelRotation',90)
+ylabel(upper(valname{v}));
+
+subnames = afq.sub_dirs(afq.sub_group==1);
+[p, ~]= fileparts(subnames{k});
+[~,f]= fileparts(p);
+
+title(f)
+
+h = colorbar('AxisLocation','out');
+h.Label.String = 'z score';
+
+if savefig ==1;
+    saveas(gca,sprintf('%s.eps',upper(valname{v})),'psc2')
+    saveas(gca,sprintf('%s.png',upper(valname{v})))
+end
+hold off
+end
+
+
+
