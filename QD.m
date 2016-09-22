@@ -67,6 +67,58 @@ computeVals =1;
 afq.params.clip2rois = 0;
 afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
 
+%% Add optic radiation
+fgName = 'LOR_MD4';
+roi1Name = 'Lt-LGN4';
+roi2Name = 'lh_V1_smooth3mm_Half';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+fgName = 'ROR_MD4';
+roi1Name = 'Rt-LGN4';
+roi2Name = 'rh_V1_smooth3mm_Half';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+
+%% 
+fgName = 'LORC_MD4';
+roi1Name = 'Lt-LGN4';
+roi2Name = 'lh_Ecc0to3';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+fgName = 'RORC_MD4';
+roi1Name = 'Rt-LGN4';
+roi2Name = 'rh_Ecc0to3';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+fgName = 'LORP_MD4';
+roi1Name = 'Lt-LGN4';
+roi2Name = 'lh_Ecc30to90';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+fgName = 'RORP_MD4';
+roi1Name = 'Rt-LGN4';
+roi2Name = 'rh_Ecc30to90';
+cleanFibers =0;
+computeVals =1;
+afq.params.clip2rois = 0;
+afq = AFQ_AddNewFiberGroup(afq, fgName, roi1Name, roi2Name, cleanFibers);
+
+
 %%
 outname = fullfile(AFQ_get(afq,'outdir'),['afq_' date]);
 save(outname,'afq');
